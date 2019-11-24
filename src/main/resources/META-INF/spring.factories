@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.valtech.springframework.ocpp.JsonClientAutoConfiguration,\
+com.valtech.springframework.ocpp.JsonServerAutoConfiguration
