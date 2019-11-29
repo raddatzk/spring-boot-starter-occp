@@ -3,9 +3,11 @@ package com.valtech.springframework.ocpp;
 import com.valtech.springframework.ocpp.client.ClientEventsConfigurer;
 import com.valtech.springframework.ocpp.config.ClientProfilesConfig;
 import com.valtech.springframework.ocpp.config.ClientProperties;
+import com.valtech.springframework.ocpp.config.ServerProperties;
 import eu.chargetime.ocpp.ClientEvents;
 import eu.chargetime.ocpp.JSONClient;
 import eu.chargetime.ocpp.feature.profile.*;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -27,10 +29,10 @@ public class JsonClientAutoConfiguration {
     private void validateClientProperties() {
         if (clientProperties.getEnabled()) {
             if (Objects.isNull(clientProperties.getConnectionUrl()) || "".equals(clientProperties.getConnectionUrl())) {
-                throw new NullPointerException("If client is enabled, connectionUrl must not be null or empty");
+                throw new InvalidPropertyException(ClientProperties.class, "connectionUrl", "If client is enabled, connectionUrl must not be null or empty");
             }
             if (Objects.isNull(clientProperties.getIdentifier()) || "".equals(clientProperties.getIdentifier())) {
-                throw new NullPointerException("If client is enabled, identifier must not be null or empty");
+                throw new InvalidPropertyException(ClientProperties.class, "identifier", "If client is enabled, identifier must not be null or empty");
             }
         }
     }

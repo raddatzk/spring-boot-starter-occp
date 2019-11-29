@@ -1,11 +1,13 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.1.RELEASE'
-        ocppVersion = '0.5-SNAPSHOT'
-        lombokVersion = '1.18.10'
-        junitVersion = '5.5.2'
-        mockitoVersion = '3.1.0'
         activationVersion = '1.1.1'
+        guavaVersion = '28.1-jre'
+        javaxValidationVersion = '2.0.1.Final'
+        junitVersion = '5.5.2'
+        lombokVersion = '1.18.10'
+        mockitoVersion = '3.1.0'
+        ocppVersion = '0.5-SNAPSHOT'
+        springBootVersion = '2.2.1.RELEASE'
     }
 }
 
@@ -41,8 +43,9 @@ dependencies {
     annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: "${springBootVersion}"
 
     api group: 'eu.chargetime.ocpp', name: 'v1_6', version: "${ocppVersion}"
-    api group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    api group: 'javax.validation', name: 'validation-api', version: "${javaxValidationVersion}"
 
+    implementation group: 'com.google.guava', name: 'guava', version: "${guavaVersion}"
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: "${springBootVersion}"
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitVersion}"
