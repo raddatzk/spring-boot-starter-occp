@@ -1,14 +1,14 @@
 package com.valtech.springframework.ocpp;
 
-import com.valtech.springframework.ocpp.client.ClientEventsConfigurer;
 import com.valtech.springframework.ocpp.config.ClientProfilesConfig;
 import com.valtech.springframework.ocpp.config.ClientProperties;
-import com.valtech.springframework.ocpp.config.ServerProperties;
+import com.valtech.springframework.ocpp.config.ClientSSLConfig;
 import eu.chargetime.ocpp.ClientEvents;
 import eu.chargetime.ocpp.JSONClient;
 import eu.chargetime.ocpp.feature.profile.*;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,15 +16,28 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
 import java.util.Objects;
 
 @Configuration
 @ConditionalOnProperty(value = "spring.ocpp.client.enabled", havingValue = "true")
 @EnableConfigurationProperties({ClientProperties.class})
-@Import({ClientProfilesConfig.class, ClientEventsConfigurer.class})
+@Import({ClientProfilesConfig.class, ClientSSLConfig.class})
 public class JsonClientAutoConfiguration {
 
     @Autowired private ClientProperties clientProperties;
+
+    @Autowired private ClientCoreProfile clientCoreProfile;
+    @Autowired(required = false) private ClientFirmwareManagementProfile clientFirmwareManagementProfile;
+    @Autowired(required = false) private ClientLocalAuthListProfile clientLocalAuthListProfile;
+    @Autowired(required = false) private ClientRemoteTriggerProfile clientRemoteTriggerProfile;
+    @Autowired(required = false) private ClientReservationProfile clientReservationProfile;
+    @Autowired(required = false) private ClientSmartChargingProfile clientSmartChargingProfile;
+    @Autowired(required = false) private ClientEvents clientEvents;
+    @Autowired(required = false)
+    @Qualifier("clientSSLContext")
+    private SSLContext sslContext;
 
     private void validateClientProperties() {
         if (clientProperties.getEnabled()) {
@@ -40,48 +53,39 @@ public class JsonClientAutoConfiguration {
     @Bean("jsonClient")
     @ConditionalOnProperty(value = "spring.ocpp.server.enabled", havingValue = "true")
     @DependsOn("jsonServer")
-    JSONClient jsonClientWithServer(
-            ClientCoreProfile clientCoreProfile,
-            ClientFirmwareManagementProfile clientFirmwareManagementProfile,
-            ClientLocalAuthListProfile clientLocalAuthListProfile,
-            ClientRemoteTriggerProfile clientRemoteTriggerProfile,
-            ClientReservationProfile clientReservationProfile,
-            ClientSmartChargingProfile clientSmartChargingProfile,
-            ClientEvents clientEvents
-    ) {
-        return createJsonClient(clientCoreProfile, clientFirmwareManagementProfile, clientLocalAuthListProfile, clientRemoteTriggerProfile, clientReservationProfile, clientSmartChargingProfile, clientEvents);
+    JSONClient jsonClientWithServer() throws IOException {
+        return createJsonClient();
     }
 
     @Bean
-    JSONClient jsonClient(
-            ClientCoreProfile clientCoreProfile,
-            ClientFirmwareManagementProfile clientFirmwareManagementProfile,
-            ClientLocalAuthListProfile clientLocalAuthListProfile,
-            ClientRemoteTriggerProfile clientRemoteTriggerProfile,
-            ClientReservationProfile clientReservationProfile,
-            ClientSmartChargingProfile clientSmartChargingProfile,
-            ClientEvents clientEvents
-    ) {
-        return createJsonClient(clientCoreProfile, clientFirmwareManagementProfile, clientLocalAuthListProfile, clientRemoteTriggerProfile, clientReservationProfile, clientSmartChargingProfile, clientEvents);
+    JSONClient jsonClient() throws IOException {
+        return createJsonClient();
     }
 
-    private JSONClient createJsonClient(
-            ClientCoreProfile clientCoreProfile,
-            ClientFirmwareManagementProfile clientFirmwareManagementProfile,
-            ClientLocalAuthListProfile clientLocalAuthListProfile,
-            ClientRemoteTriggerProfile clientRemoteTriggerProfile,
-            ClientReservationProfile clientReservationProfile,
-            ClientSmartChargingProfile clientSmartChargingProfile,
-            ClientEvents clientEvents
-    ) {
+    private JSONClient createJsonClient() throws IOException {
         validateClientProperties();
 
         JSONClient client = new JSONClient(clientCoreProfile, clientProperties.getIdentifier());
-        client.addFeatureProfile(clientFirmwareManagementProfile);
-        client.addFeatureProfile(clientLocalAuthListProfile);
-        client.addFeatureProfile(clientRemoteTriggerProfile);
-        client.addFeatureProfile(clientReservationProfile);
-        client.addFeatureProfile(clientSmartChargingProfile);
+
+        if (clientFirmwareManagementProfile != null) {
+            client.addFeatureProfile(clientFirmwareManagementProfile);
+        }
+        if (clientLocalAuthListProfile != null) {
+            client.addFeatureProfile(clientLocalAuthListProfile);
+        }
+        if (clientRemoteTriggerProfile != null) {
+            client.addFeatureProfile(clientRemoteTriggerProfile);
+        }
+        if (clientReservationProfile != null) {
+            client.addFeatureProfile(clientReservationProfile);
+        }
+        if (clientSmartChargingProfile != null) {
+            client.addFeatureProfile(clientSmartChargingProfile);
+        }
+
+        if (clientProperties.getEnableSsl()) {
+            client.enableWSS(sslContext);
+        }
 
         client.connect(clientProperties.getConnectionUrl(), clientEvents);
 

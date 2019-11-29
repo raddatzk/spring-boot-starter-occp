@@ -15,7 +15,6 @@ plugins {
     id "io.franzbecker.gradle-lombok" version "3.2.0"
     id 'maven-publish'
     id 'java-library'
-    id 'maven'
 }
 
 lombok {
@@ -24,7 +23,6 @@ lombok {
 
 group = 'com.valtech.springframework.boot'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
 
 publishing {
     publications {
@@ -33,6 +31,8 @@ publishing {
         }
     }
 }
+
+compileJava.dependsOn(processResources)
 
 repositories {
     mavenLocal()
@@ -54,7 +54,7 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: "${mockitoVersion}"
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}"
 
-    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitVersion}"
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitVersion}"
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }

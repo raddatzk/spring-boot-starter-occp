@@ -1,0 +1,13 @@
+{
+  "hints": [
+    {
+      "name": "spring.ocpp.server.ssl.key-store-type",
+      "values": [
+        {
+          "value": "jks",
+          "description": "Use a keystore of type JKS."
+        }
+      ]
+    }
+  ]
+}

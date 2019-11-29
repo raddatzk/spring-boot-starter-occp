@@ -5,32 +5,28 @@ import eu.chargetime.ocpp.model.firmware.DiagnosticsStatusNotificationConfirmati
 import eu.chargetime.ocpp.model.firmware.DiagnosticsStatusNotificationRequest;
 import eu.chargetime.ocpp.model.firmware.FirmwareStatusNotificationConfirmation;
 import eu.chargetime.ocpp.model.firmware.FirmwareStatusNotificationRequest;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
-@ConditionalOnMissingBean(ServerFirmwareManagementEventHandler.class)
-public interface ServerFirmwareManagementEventHandlerConfigurer extends ServerFirmwareManagementEventHandler {
+public interface ServerFirmwareManagementEventHandlerAdapter extends ServerFirmwareManagementEventHandler {
 
     /**
-     * Handle a ${@link DiagnosticsStatusNotificationRequest}
+     * Handle a {@link DiagnosticsStatusNotificationRequest}
      *
      * @param sessionIndex                         source of the request
-     * @param diagnosticsStatusNotificationRequest ${@link DiagnosticsStatusNotificationRequest}, the received request
-     * @return confirmation ${@link DiagnosticsStatusNotificationConfirmation}, defaults to null (unsupported operation)
+     * @param diagnosticsStatusNotificationRequest {@link DiagnosticsStatusNotificationRequest}, the received request
+     * @return {@link DiagnosticsStatusNotificationConfirmation}, defaults to null (unsupported operation)
      */
     default DiagnosticsStatusNotificationConfirmation handleDiagnosticsStatusNotificationRequest(UUID sessionIndex, DiagnosticsStatusNotificationRequest diagnosticsStatusNotificationRequest) {
         return null;
     }
 
     /**
-     * Handle a ${@link FirmwareStatusNotificationRequest}
+     * Handle a {@link FirmwareStatusNotificationRequest}
      *
      * @param sessionIndex                      source of the request
-     * @param firmwareStatusNotificationRequest ${@link FirmwareStatusNotificationRequest}, the received request
-     * @return confirmation ${@link FirmwareStatusNotificationConfirmation}, defaults to null (unsupported operation)
+     * @param firmwareStatusNotificationRequest {@link FirmwareStatusNotificationRequest}, the received request
+     * @return {@link FirmwareStatusNotificationConfirmation}, defaults to null (unsupported operation)
      */
     default FirmwareStatusNotificationConfirmation handleFirmwareStatusNotificationRequest(UUID sessionIndex, FirmwareStatusNotificationRequest firmwareStatusNotificationRequest) {
         return null;
