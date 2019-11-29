@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({AbstractClientCoreEventHandler.class, AbstractClientFirmwareManagementEventHandler.class, AbstractClientLocalAuthListEventHandler.class, AbstractClientRemoteTriggerEventHandler.class, AbstractClientReservationEventHandler.class, AbstractClientSmartChargingEventHandler.class})
+@Import({ClientCoreEventHandlerConfigurer.class, ClientFirmwareManagementEventHandlerConfigurer.class, ClientLocalAuthListEventHandlerConfigurer.class, ClientRemoteTriggerEventHandlerConfigurer.class, ClientReservationEventHandlerConfigurer.class, ClientSmartChargingEventHandlerConfigurer.class})
 public class ClientProfilesConfig {
 
     @Bean

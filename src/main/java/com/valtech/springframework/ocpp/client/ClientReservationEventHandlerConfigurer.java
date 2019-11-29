@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnMissingBean(ClientReservationEventHandler.class)
-public class AbstractClientReservationEventHandler implements ClientReservationEventHandler {
+public interface ClientReservationEventHandlerConfigurer extends ClientReservationEventHandler {
 
-    public ReserveNowConfirmation handleReserveNowRequest(ReserveNowRequest reserveNowRequest) {
+    default ReserveNowConfirmation handleReserveNowRequest(ReserveNowRequest reserveNowRequest) {
         return null;
     }
 
-    public CancelReservationConfirmation handleCancelReservationRequest(CancelReservationRequest cancelReservationRequest) {
+    default CancelReservationConfirmation handleCancelReservationRequest(CancelReservationRequest cancelReservationRequest) {
         return null;
     }
 }

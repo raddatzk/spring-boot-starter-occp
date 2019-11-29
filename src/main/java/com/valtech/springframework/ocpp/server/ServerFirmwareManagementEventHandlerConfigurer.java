@@ -12,13 +12,13 @@ import java.util.UUID;
 
 @Component
 @ConditionalOnMissingBean(ServerFirmwareManagementEventHandler.class)
-public class AbstractServerFirmwareManagementEventHandler implements ServerFirmwareManagementEventHandler {
+public interface ServerFirmwareManagementEventHandlerConfigurer extends ServerFirmwareManagementEventHandler {
 
-    public DiagnosticsStatusNotificationConfirmation handleDiagnosticsStatusNotificationRequest(UUID uuid, DiagnosticsStatusNotificationRequest diagnosticsStatusNotificationRequest) {
+    default DiagnosticsStatusNotificationConfirmation handleDiagnosticsStatusNotificationRequest(UUID uuid, DiagnosticsStatusNotificationRequest diagnosticsStatusNotificationRequest) {
         return null;
     }
 
-    public FirmwareStatusNotificationConfirmation handleFirmwareStatusNotificationRequest(UUID uuid, FirmwareStatusNotificationRequest firmwareStatusNotificationRequest) {
+    default FirmwareStatusNotificationConfirmation handleFirmwareStatusNotificationRequest(UUID uuid, FirmwareStatusNotificationRequest firmwareStatusNotificationRequest) {
         return null;
     }
 }

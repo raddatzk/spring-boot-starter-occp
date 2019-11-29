@@ -11,14 +11,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import com.valtech.springframework.ocpp.server.AbstractServerEvents;
+import com.valtech.springframework.ocpp.server.ServerEventsConfigurer;
 
 import java.util.Objects;
 
 @Configuration
 @ConditionalOnProperty(value = "spring.ocpp.server.enabled", havingValue = "true")
 @EnableConfigurationProperties({ServerProperties.class})
-@Import({ServerProfilesConfig.class, AbstractServerEvents.class})
+@Import({ServerProfilesConfig.class, ServerEventsConfigurer.class})
 public class JsonServerAutoConfiguration {
 
     @Autowired private ServerProperties serverProperties;

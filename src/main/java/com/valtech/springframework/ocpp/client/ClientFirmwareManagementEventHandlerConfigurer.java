@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnMissingBean(ClientFirmwareManagementEventHandler.class)
-public class AbstractClientFirmwareManagementEventHandler implements ClientFirmwareManagementEventHandler{
+public interface ClientFirmwareManagementEventHandlerConfigurer extends ClientFirmwareManagementEventHandler{
 
-    public GetDiagnosticsConfirmation handleGetDiagnosticsRequest(GetDiagnosticsRequest getDiagnosticsRequest) {
+    default GetDiagnosticsConfirmation handleGetDiagnosticsRequest(GetDiagnosticsRequest getDiagnosticsRequest) {
         return null;
     }
 
-    public UpdateFirmwareConfirmation handleUpdateFirmwareRequest(UpdateFirmwareRequest updateFirmwareRequest) {
+    default UpdateFirmwareConfirmation handleUpdateFirmwareRequest(UpdateFirmwareRequest updateFirmwareRequest) {
         return null;
     }
 }

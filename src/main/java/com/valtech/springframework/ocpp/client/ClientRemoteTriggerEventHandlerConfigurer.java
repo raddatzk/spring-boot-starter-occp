@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnMissingBean(ClientRemoteTriggerHandler.class)
-public class AbstractClientRemoteTriggerEventHandler implements ClientRemoteTriggerHandler {
+public interface ClientRemoteTriggerEventHandlerConfigurer extends ClientRemoteTriggerHandler {
 
-    public TriggerMessageConfirmation handleTriggerMessageRequest(TriggerMessageRequest triggerMessageRequest) {
+    default TriggerMessageConfirmation handleTriggerMessageRequest(TriggerMessageRequest triggerMessageRequest) {
         return null;
     }
 }

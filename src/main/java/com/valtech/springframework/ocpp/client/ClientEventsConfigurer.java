@@ -6,14 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnMissingBean(ClientEvents.class)
-public class AbstractClientEvents implements ClientEvents {
-    @Override
-    public void connectionOpened() {
+public interface ClientEventsConfigurer extends ClientEvents {
 
-    }
+    default void connectionOpened() { }
 
-    @Override
-    public void connectionClosed() {
-
-    }
+    default void connectionClosed() { }
 }

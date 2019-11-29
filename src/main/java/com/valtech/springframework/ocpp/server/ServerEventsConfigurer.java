@@ -9,13 +9,9 @@ import java.util.UUID;
 
 @Component
 @ConditionalOnMissingBean(ServerEvents.class)
-public class AbstractServerEvents implements ServerEvents {
+public interface ServerEventsConfigurer extends ServerEvents {
 
-    public void newSession(UUID uuid, SessionInformation sessionInformation) {
+    default void newSession(UUID uuid, SessionInformation sessionInformation) {}
 
-    }
-
-    public void lostSession(UUID uuid) {
-
-    }
+    default void lostSession(UUID uuid) {}
 }

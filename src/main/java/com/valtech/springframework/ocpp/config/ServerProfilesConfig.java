@@ -4,11 +4,11 @@ import eu.chargetime.ocpp.feature.profile.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import com.valtech.springframework.ocpp.server.AbstractServerCoreEventHandler;
-import com.valtech.springframework.ocpp.server.AbstractServerFirmwareManagementEventHandler;
+import com.valtech.springframework.ocpp.server.ServerCoreEventHandlerConfigurer;
+import com.valtech.springframework.ocpp.server.ServerFirmwareManagementEventHandlerConfigurer;
 
 @Configuration
-@Import({AbstractServerCoreEventHandler.class, AbstractServerFirmwareManagementEventHandler.class})
+@Import({ServerCoreEventHandlerConfigurer.class, ServerFirmwareManagementEventHandlerConfigurer.class})
 public class ServerProfilesConfig {
 
     @Bean

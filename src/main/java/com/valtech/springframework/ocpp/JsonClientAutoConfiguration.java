@@ -1,14 +1,12 @@
 package com.valtech.springframework.ocpp;
 
-import com.valtech.springframework.ocpp.client.AbstractClientEvents;
+import com.valtech.springframework.ocpp.client.ClientEventsConfigurer;
 import com.valtech.springframework.ocpp.config.ClientProfilesConfig;
 import com.valtech.springframework.ocpp.config.ClientProperties;
 import eu.chargetime.ocpp.ClientEvents;
 import eu.chargetime.ocpp.JSONClient;
-import eu.chargetime.ocpp.JSONServer;
 import eu.chargetime.ocpp.feature.profile.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,14 +14,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Configuration
 @ConditionalOnProperty(value = "spring.ocpp.client.enabled", havingValue = "true")
 @EnableConfigurationProperties({ClientProperties.class})
-@Import({ClientProfilesConfig.class, AbstractClientEvents.class})
+@Import({ClientProfilesConfig.class, ClientEventsConfigurer.class})
 public class JsonClientAutoConfiguration {
 
     @Autowired private ClientProperties clientProperties;
