@@ -12,10 +12,22 @@ import org.springframework.stereotype.Component;
 @ConditionalOnMissingBean(ClientReservationEventHandler.class)
 public interface ClientReservationEventHandlerConfigurer extends ClientReservationEventHandler {
 
+    /**
+     * Handle a ${@link ReserveNowRequest}
+     *
+     * @param reserveNowRequest ${@link ReserveNowRequest}, the received request
+     * @return confirmation ${@link ReserveNowConfirmation}, defaults to null (unsupported operation)
+     */
     default ReserveNowConfirmation handleReserveNowRequest(ReserveNowRequest reserveNowRequest) {
         return null;
     }
 
+    /**
+     * Handle a ${@link CancelReservationRequest}
+     *
+     * @param cancelReservationRequest ${@link CancelReservationRequest}, the received request
+     * @return confirmation ${@link CancelReservationConfirmation}, defaults to null (unsupported operation)
+     */
     default CancelReservationConfirmation handleCancelReservationRequest(CancelReservationRequest cancelReservationRequest) {
         return null;
     }

@@ -14,11 +14,25 @@ import java.util.UUID;
 @ConditionalOnMissingBean(ServerFirmwareManagementEventHandler.class)
 public interface ServerFirmwareManagementEventHandlerConfigurer extends ServerFirmwareManagementEventHandler {
 
-    default DiagnosticsStatusNotificationConfirmation handleDiagnosticsStatusNotificationRequest(UUID uuid, DiagnosticsStatusNotificationRequest diagnosticsStatusNotificationRequest) {
+    /**
+     * Handle a ${@link DiagnosticsStatusNotificationRequest}
+     *
+     * @param sessionIndex                         source of the request
+     * @param diagnosticsStatusNotificationRequest ${@link DiagnosticsStatusNotificationRequest}, the received request
+     * @return confirmation ${@link DiagnosticsStatusNotificationConfirmation}, defaults to null (unsupported operation)
+     */
+    default DiagnosticsStatusNotificationConfirmation handleDiagnosticsStatusNotificationRequest(UUID sessionIndex, DiagnosticsStatusNotificationRequest diagnosticsStatusNotificationRequest) {
         return null;
     }
 
-    default FirmwareStatusNotificationConfirmation handleFirmwareStatusNotificationRequest(UUID uuid, FirmwareStatusNotificationRequest firmwareStatusNotificationRequest) {
+    /**
+     * Handle a ${@link FirmwareStatusNotificationRequest}
+     *
+     * @param sessionIndex                      source of the request
+     * @param firmwareStatusNotificationRequest ${@link FirmwareStatusNotificationRequest}, the received request
+     * @return confirmation ${@link FirmwareStatusNotificationConfirmation}, defaults to null (unsupported operation)
+     */
+    default FirmwareStatusNotificationConfirmation handleFirmwareStatusNotificationRequest(UUID sessionIndex, FirmwareStatusNotificationRequest firmwareStatusNotificationRequest) {
         return null;
     }
 }

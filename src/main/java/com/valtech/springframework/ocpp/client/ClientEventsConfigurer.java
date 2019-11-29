@@ -8,7 +8,15 @@ import org.springframework.stereotype.Component;
 @ConditionalOnMissingBean(ClientEvents.class)
 public interface ClientEventsConfigurer extends ClientEvents {
 
-    default void connectionOpened() { }
+    /**
+     * Handle an opened connection
+     */
+    default void connectionOpened() {
+    }
 
-    default void connectionClosed() { }
+    /**
+     * Handle a closed connection
+     */
+    default void connectionClosed() {
+    }
 }

@@ -12,10 +12,22 @@ import org.springframework.stereotype.Component;
 @ConditionalOnMissingBean(ClientLocalAuthListEventHandler.class)
 public interface ClientLocalAuthListEventHandlerConfigurer extends ClientLocalAuthListEventHandler {
 
+    /**
+     * Handle a ${@link GetLocalListVersionRequest}
+     *
+     * @param getLocalListVersionRequest ${@link GetLocalListVersionRequest}, the received request
+     * @return confirmation ${@link GetLocalListVersionConfirmation}, defaults to null (unsupported operation)
+     */
     default GetLocalListVersionConfirmation handleGetLocalListVersionRequest(GetLocalListVersionRequest getLocalListVersionRequest) {
         return null;
     }
 
+    /**
+     * Handle a ${@link SendLocalListRequest}
+     *
+     * @param sendLocalListRequest ${@link SendLocalListRequest}, the received request
+     * @return confirmation ${@link SendLocalListConfirmation}, defaults to null (unsupported operation)
+     */
     default SendLocalListConfirmation handleSendLocalListRequest(SendLocalListRequest sendLocalListRequest) {
         return null;
     }

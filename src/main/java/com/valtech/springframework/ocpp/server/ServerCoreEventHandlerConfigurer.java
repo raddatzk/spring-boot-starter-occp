@@ -11,35 +11,91 @@ import java.util.UUID;
 @ConditionalOnMissingBean(ServerCoreEventHandler.class)
 public interface ServerCoreEventHandlerConfigurer extends ServerCoreEventHandler {
 
-    default AuthorizeConfirmation handleAuthorizeRequest(UUID uuid, AuthorizeRequest authorizeRequest) {
+    /**
+     * Handle a ${@link AuthorizeRequest}
+     *
+     * @param sessionIndex     source of the request
+     * @param authorizeRequest ${@link AuthorizeRequest}, the received request
+     * @return confirmation ${@link AuthorizeConfirmation}, defaults to null (unsupported operation)
+     */
+    default AuthorizeConfirmation handleAuthorizeRequest(UUID sessionIndex, AuthorizeRequest authorizeRequest) {
         return null;
     }
 
-    default BootNotificationConfirmation handleBootNotificationRequest(UUID uuid, BootNotificationRequest bootNotificationRequest) {
+    /**
+     * Handle a ${@link BootNotificationRequest}
+     *
+     * @param sessionIndex            source of the request
+     * @param bootNotificationRequest ${@link BootNotificationRequest}, the received request
+     * @return confirmation ${@link BootNotificationConfirmation}, defaults to null (unsupported operation)
+     */
+    default BootNotificationConfirmation handleBootNotificationRequest(UUID sessionIndex, BootNotificationRequest bootNotificationRequest) {
         return null;
     }
 
-    default DataTransferConfirmation handleDataTransferRequest(UUID uuid, DataTransferRequest dataTransferRequest) {
+    /**
+     * Handle a ${@link DataTransferRequest}
+     *
+     * @param sessionIndex        source of the request
+     * @param dataTransferRequest ${@link DataTransferRequest}, the received request
+     * @return confirmation ${@link DataTransferConfirmation}, defaults to null (unsupported operation)
+     */
+    default DataTransferConfirmation handleDataTransferRequest(UUID sessionIndex, DataTransferRequest dataTransferRequest) {
         return null;
     }
 
-    default HeartbeatConfirmation handleHeartbeatRequest(UUID uuid, HeartbeatRequest heartbeatRequest) {
+    /**
+     * Handle a ${@link HeartbeatRequest}
+     *
+     * @param sessionIndex     source of the request
+     * @param heartbeatRequest ${@link HeartbeatRequest}, the received request
+     * @return confirmation ${@link HeartbeatConfirmation}, defaults to null (unsupported operation)
+     */
+    default HeartbeatConfirmation handleHeartbeatRequest(UUID sessionIndex, HeartbeatRequest heartbeatRequest) {
         return null;
     }
 
-    default MeterValuesConfirmation handleMeterValuesRequest(UUID uuid, MeterValuesRequest meterValuesRequest) {
+    /**
+     * Handle a ${@link MeterValuesRequest}
+     *
+     * @param sessionIndex       source of the request
+     * @param meterValuesRequest ${@link MeterValuesRequest}, the received request
+     * @return confirmation ${@link MeterValuesConfirmation}, defaults to null (unsupported operation)
+     */
+    default MeterValuesConfirmation handleMeterValuesRequest(UUID sessionIndex, MeterValuesRequest meterValuesRequest) {
         return null;
     }
 
-    default StartTransactionConfirmation handleStartTransactionRequest(UUID uuid, StartTransactionRequest startTransactionRequest) {
+    /**
+     * Handle a ${@link StartTransactionRequest}
+     *
+     * @param sessionIndex            source of the request
+     * @param startTransactionRequest ${@link StartTransactionRequest}, the received request
+     * @return confirmation ${@link StartTransactionConfirmation}, defaults to null (unsupported operation)
+     */
+    default StartTransactionConfirmation handleStartTransactionRequest(UUID sessionIndex, StartTransactionRequest startTransactionRequest) {
         return null;
     }
 
-    default StatusNotificationConfirmation handleStatusNotificationRequest(UUID uuid, StatusNotificationRequest statusNotificationRequest) {
+    /**
+     * Handle a ${@link StatusNotificationRequest}
+     *
+     * @param sessionIndex              source of the request
+     * @param statusNotificationRequest ${@link StatusNotificationRequest}, the received request
+     * @return confirmation ${@link StatusNotificationConfirmation}, defaults to null (unsupported operation)
+     */
+    default StatusNotificationConfirmation handleStatusNotificationRequest(UUID sessionIndex, StatusNotificationRequest statusNotificationRequest) {
         return null;
     }
 
-    default StopTransactionConfirmation handleStopTransactionRequest(UUID uuid, StopTransactionRequest stopTransactionRequest) {
+    /**
+     * Handle a ${@link StopTransactionRequest}
+     *
+     * @param sessionIndex           source of the request
+     * @param stopTransactionRequest ${@link StopTransactionRequest}, the received request
+     * @return confirmation ${@link StopTransactionConfirmation}, defaults to null (unsupported operation)
+     */
+    default StopTransactionConfirmation handleStopTransactionRequest(UUID sessionIndex, StopTransactionRequest stopTransactionRequest) {
         return null;
     }
 }

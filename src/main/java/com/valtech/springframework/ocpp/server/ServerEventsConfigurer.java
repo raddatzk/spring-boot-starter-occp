@@ -2,6 +2,7 @@ package com.valtech.springframework.ocpp.server;
 
 import eu.chargetime.ocpp.ServerEvents;
 import eu.chargetime.ocpp.model.SessionInformation;
+import eu.chargetime.ocpp.model.core.AuthorizeRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,20 @@ import java.util.UUID;
 @ConditionalOnMissingBean(ServerEvents.class)
 public interface ServerEventsConfigurer extends ServerEvents {
 
-    default void newSession(UUID uuid, SessionInformation sessionInformation) {}
+    /**
+     * Handle a new Session
+     *
+     * @param sessionIndex       source of the request
+     * @param sessionInformation ${@link SessionInformation}, information about the incoming session
+     */
+    default void newSession(UUID sessionIndex, SessionInformation sessionInformation) {
+    }
 
-    default void lostSession(UUID uuid) {}
+    /**
+     * Handle a ${@link AuthorizeRequest}
+     *
+     * @param sessionIndex source of the request
+     */
+    default void lostSession(UUID sessionIndex) {
+    }
 }
