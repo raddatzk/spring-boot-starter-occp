@@ -5,7 +5,6 @@ import eu.chargetime.ocpp.model.reservation.CancelReservationConfirmation;
 import eu.chargetime.ocpp.model.reservation.CancelReservationRequest;
 import eu.chargetime.ocpp.model.reservation.ReserveNowConfirmation;
 import eu.chargetime.ocpp.model.reservation.ReserveNowRequest;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
 public interface ClientReservationEventHandlerAdapter extends ClientReservationEventHandler {
 

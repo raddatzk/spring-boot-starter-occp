@@ -1,5 +1,6 @@
-package com.valtech.springframework.ocpp.config;
+package com.valtech.springframework.ocpp.config.client;
 
+import com.valtech.springframework.ocpp.config.ssl.SSLProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

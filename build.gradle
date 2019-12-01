@@ -12,9 +12,11 @@ buildscript {
 }
 
 plugins {
-    id "io.franzbecker.gradle-lombok" version "3.2.0"
-    id 'maven-publish'
+    id 'io.franzbecker.gradle-lombok' version "3.2.0"
     id 'java-library'
+    id 'maven-publish'
+    id 'org.sonarqube' version "2.7"
+    id 'jacoco'
 }
 
 lombok {
@@ -29,6 +31,17 @@ publishing {
         maven(MavenPublication) {
             from(components.java)
         }
+    }
+}
+
+sonarqube {
+    def exclusions = [
+            "**/com/valtech/springframework/ocpp/config/**/*Properties.java",
+            "**/com/valtech/springframework/ocpp/**/*EventHandlerAdapter.java",
+            "**/com/valtech/springframework/ocpp/**/*EventsAdapter.java"
+    ]
+    properties {
+        property 'sonar.coverage.exclusions', exclusions
     }
 }
 

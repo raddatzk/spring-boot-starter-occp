@@ -1,13 +1,12 @@
 package com.valtech.springframework.ocpp;
 
-import com.valtech.springframework.ocpp.config.ClientProfilesConfig;
-import com.valtech.springframework.ocpp.config.ClientProperties;
-import com.valtech.springframework.ocpp.config.ClientSSLConfig;
+import com.valtech.springframework.ocpp.config.client.ClientProfilesConfig;
+import com.valtech.springframework.ocpp.config.client.ClientProperties;
+import com.valtech.springframework.ocpp.config.client.ClientSSLConfig;
+import com.valtech.springframework.ocpp.config.client.ClientTools;
 import eu.chargetime.ocpp.ClientEvents;
 import eu.chargetime.ocpp.JSONClient;
 import eu.chargetime.ocpp.feature.profile.*;
-import org.springframework.beans.InvalidPropertyException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,7 +17,7 @@ import org.springframework.context.annotation.Import;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.Optional;
 
 @Configuration
 @ConditionalOnProperty(value = "spring.ocpp.client.enabled", havingValue = "true")
@@ -26,28 +25,28 @@ import java.util.Objects;
 @Import({ClientProfilesConfig.class, ClientSSLConfig.class})
 public class JsonClientAutoConfiguration {
 
-    @Autowired private ClientProperties clientProperties;
+    private final ClientProperties clientProperties;
 
-    @Autowired private ClientCoreProfile clientCoreProfile;
-    @Autowired(required = false) private ClientFirmwareManagementProfile clientFirmwareManagementProfile;
-    @Autowired(required = false) private ClientLocalAuthListProfile clientLocalAuthListProfile;
-    @Autowired(required = false) private ClientRemoteTriggerProfile clientRemoteTriggerProfile;
-    @Autowired(required = false) private ClientReservationProfile clientReservationProfile;
-    @Autowired(required = false) private ClientSmartChargingProfile clientSmartChargingProfile;
-    @Autowired(required = false) private ClientEvents clientEvents;
-    @Autowired(required = false)
-    @Qualifier("clientSSLContext")
-    private SSLContext sslContext;
+    private final ClientCoreProfile clientCoreProfile;
+    private final Optional<ClientFirmwareManagementProfile> clientFirmwareManagementProfile;
+    private final Optional<ClientLocalAuthListProfile> clientLocalAuthListProfile;
+    private final Optional<ClientRemoteTriggerProfile> clientRemoteTriggerProfile;
+    private final Optional<ClientReservationProfile> clientReservationProfile;
+    private final Optional<ClientSmartChargingProfile> clientSmartChargingProfile;
+    private final Optional<ClientEvents> clientEvents;
+    private final Optional<SSLContext> sslContext;
 
-    private void validateClientProperties() {
-        if (clientProperties.getEnabled()) {
-            if (Objects.isNull(clientProperties.getConnectionUrl()) || "".equals(clientProperties.getConnectionUrl())) {
-                throw new InvalidPropertyException(ClientProperties.class, "connectionUrl", "If client is enabled, connectionUrl must not be null or empty");
-            }
-            if (Objects.isNull(clientProperties.getIdentifier()) || "".equals(clientProperties.getIdentifier())) {
-                throw new InvalidPropertyException(ClientProperties.class, "identifier", "If client is enabled, identifier must not be null or empty");
-            }
-        }
+    @java.lang.SuppressWarnings("squid:S00107")
+    public JsonClientAutoConfiguration(ClientProperties clientProperties, ClientCoreProfile clientCoreProfile, Optional<ClientFirmwareManagementProfile> clientFirmwareManagementProfile, Optional<ClientLocalAuthListProfile> clientLocalAuthListProfile, Optional<ClientRemoteTriggerProfile> clientRemoteTriggerProfile, Optional<ClientReservationProfile> clientReservationProfile, Optional<ClientSmartChargingProfile> clientSmartChargingProfile, Optional<ClientEvents> clientEvents, @Qualifier("clientSSLContext") Optional<SSLContext> sslContext) {
+        this.clientProperties = clientProperties;
+        this.clientCoreProfile = clientCoreProfile;
+        this.clientFirmwareManagementProfile = clientFirmwareManagementProfile;
+        this.clientLocalAuthListProfile = clientLocalAuthListProfile;
+        this.clientRemoteTriggerProfile = clientRemoteTriggerProfile;
+        this.clientReservationProfile = clientReservationProfile;
+        this.clientSmartChargingProfile = clientSmartChargingProfile;
+        this.clientEvents = clientEvents;
+        this.sslContext = sslContext;
     }
 
     @Bean("jsonClient")
@@ -63,31 +62,21 @@ public class JsonClientAutoConfiguration {
     }
 
     private JSONClient createJsonClient() throws IOException {
-        validateClientProperties();
+        ClientTools.validateClientProperties(clientProperties);
 
         JSONClient client = new JSONClient(clientCoreProfile, clientProperties.getIdentifier());
 
-        if (clientFirmwareManagementProfile != null) {
-            client.addFeatureProfile(clientFirmwareManagementProfile);
-        }
-        if (clientLocalAuthListProfile != null) {
-            client.addFeatureProfile(clientLocalAuthListProfile);
-        }
-        if (clientRemoteTriggerProfile != null) {
-            client.addFeatureProfile(clientRemoteTriggerProfile);
-        }
-        if (clientReservationProfile != null) {
-            client.addFeatureProfile(clientReservationProfile);
-        }
-        if (clientSmartChargingProfile != null) {
-            client.addFeatureProfile(clientSmartChargingProfile);
+        clientFirmwareManagementProfile.ifPresent(client::addFeatureProfile);
+        clientLocalAuthListProfile.ifPresent(client::addFeatureProfile);
+        clientRemoteTriggerProfile.ifPresent(client::addFeatureProfile);
+        clientReservationProfile.ifPresent(client::addFeatureProfile);
+        clientSmartChargingProfile.ifPresent(client::addFeatureProfile);
+
+        if (sslContext.isPresent()) {
+            client.enableWSS(sslContext.get());
         }
 
-        if (clientProperties.getEnableSsl()) {
-            client.enableWSS(sslContext);
-        }
-
-        client.connect(clientProperties.getConnectionUrl(), clientEvents);
+        client.connect(clientProperties.getConnectionUrl(), clientEvents.orElse(null));
 
         return client;
     }

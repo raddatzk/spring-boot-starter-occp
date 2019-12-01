@@ -1,4 +1,4 @@
-package com.valtech.springframework.ocpp.config;
+package com.valtech.springframework.ocpp.config.client;
 
 import eu.chargetime.ocpp.feature.profile.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

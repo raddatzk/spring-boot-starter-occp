@@ -1,5 +1,6 @@
-package com.valtech.springframework.ocpp.config;
+package com.valtech.springframework.ocpp.config.server;
 
+import com.valtech.springframework.ocpp.config.ssl.SSLProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,7 +30,7 @@ public class ServerProperties {
     /**
      * Port under which the server will be reachable.
      * <p>
-     * Must not be null or empty if the server is enabled.
+     * Must not be null or below 1024 if the server is enabled.
      */
     private Integer port;
 

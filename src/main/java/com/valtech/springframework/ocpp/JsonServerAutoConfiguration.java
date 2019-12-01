@@ -1,14 +1,12 @@
 package com.valtech.springframework.ocpp;
 
-import com.google.common.net.InetAddresses;
-import com.valtech.springframework.ocpp.config.ServerProfilesConfig;
-import com.valtech.springframework.ocpp.config.ServerProperties;
-import com.valtech.springframework.ocpp.config.ServerSSLConfig;
+import com.valtech.springframework.ocpp.config.server.ServerProfilesConfig;
+import com.valtech.springframework.ocpp.config.server.ServerProperties;
+import com.valtech.springframework.ocpp.config.server.ServerSSLConfig;
+import com.valtech.springframework.ocpp.config.server.ServerTools;
 import eu.chargetime.ocpp.JSONServer;
 import eu.chargetime.ocpp.ServerEvents;
 import eu.chargetime.ocpp.feature.profile.*;
-import org.springframework.beans.InvalidPropertyException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,7 +16,7 @@ import org.springframework.context.annotation.Import;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.Optional;
 
 @Configuration
 @ConditionalOnProperty(value = "spring.ocpp.server.enabled", havingValue = "true")
@@ -26,57 +24,46 @@ import java.util.Objects;
 @Import({ServerProfilesConfig.class, ServerSSLConfig.class})
 public class JsonServerAutoConfiguration {
 
-    @Autowired private ServerProperties serverProperties;
-    @Autowired private ServerCoreProfile serverCoreProfile;
-    @Autowired(required = false) private ServerReservationProfile serverReservationProfile;
-    @Autowired(required = false) private ServerSmartChargingProfile serverSmartChargingProfile;
-    @Autowired(required = false) private ServerRemoteTriggerProfile serverRemoteTriggerProfile;
-    @Autowired(required = false) private ServerFirmwareManagementProfile serverFirmwareManagementProfile;
-    @Autowired(required = false) private ServerLocalAuthListProfile serverLocalAuthListProfile;
-    @Autowired(required = false) private ServerEvents serverEvents;
-    @Autowired(required = false)
-    private @Qualifier("serverSSLContext")
-    SSLContext sslContext;
+    private final ServerProperties serverProperties;
+    private final ServerCoreProfile serverCoreProfile;
+    private final ServerReservationProfile serverReservationProfile;
+    private final ServerSmartChargingProfile serverSmartChargingProfile;
+    private final ServerRemoteTriggerProfile serverRemoteTriggerProfile;
+    private final ServerLocalAuthListProfile serverLocalAuthListProfile;
+    private final Optional<ServerEvents> serverEvents;
+    private final Optional<ServerFirmwareManagementProfile> serverFirmwareManagementProfile;
+    private final Optional<SSLContext> sslContext;
 
-
-    private void validateServerProperties() {
-        if (serverProperties.getEnabled()) {
-            if (Objects.isNull(serverProperties.getHost()) || "".equals(serverProperties.getHost())) {
-                throw new InvalidPropertyException(ServerProperties.class, "host", "If server is enabled, host must not be null or empty");
-            }
-
-            if (InetAddresses.isInetAddress(serverProperties.getHost())) {
-                throw new InvalidPropertyException(ServerProperties.class, "host", String.format("%s is not a valid host", serverProperties.getHost()));
-            }
-
-            if (Objects.isNull(serverProperties.getPort())) {
-                throw new InvalidPropertyException(ServerProperties.class, "port", "If server is enabled, port must not be null");
-            }
-
-            if (serverProperties.getPort() <= 1024) {
-                throw new InvalidPropertyException(ServerProperties.class, "port", "Port cannot be below 1024");
-            }
-        }
+    @java.lang.SuppressWarnings("squid:S00107")
+    public JsonServerAutoConfiguration(ServerProperties serverProperties, ServerCoreProfile serverCoreProfile, ServerReservationProfile serverReservationProfile, ServerSmartChargingProfile serverSmartChargingProfile, ServerRemoteTriggerProfile serverRemoteTriggerProfile, ServerLocalAuthListProfile serverLocalAuthListProfile, Optional<ServerEvents> serverEvents, Optional<ServerFirmwareManagementProfile> serverFirmwareManagementProfile, @Qualifier("serverSSLContext") Optional<SSLContext> sslContext) {
+        this.serverProperties = serverProperties;
+        this.serverCoreProfile = serverCoreProfile;
+        this.serverReservationProfile = serverReservationProfile;
+        this.serverSmartChargingProfile = serverSmartChargingProfile;
+        this.serverRemoteTriggerProfile = serverRemoteTriggerProfile;
+        this.serverLocalAuthListProfile = serverLocalAuthListProfile;
+        this.serverEvents = serverEvents;
+        this.serverFirmwareManagementProfile = serverFirmwareManagementProfile;
+        this.sslContext = sslContext;
     }
 
     @Bean
-    public JSONServer jsonServer() throws IOException {
-        validateServerProperties();
+    public JSONServer jsonServer(
+    ) throws IOException {
+        ServerTools.validateServerProperties(serverProperties);
 
         JSONServer server = new JSONServer(serverCoreProfile);
 
-        if (serverFirmwareManagementProfile != null) {
-            server.addFeatureProfile(serverFirmwareManagementProfile);
-        }
+        serverFirmwareManagementProfile.ifPresent(server::addFeatureProfile);
         server.addFeatureProfile(serverReservationProfile);
         server.addFeatureProfile(serverSmartChargingProfile);
         server.addFeatureProfile(serverRemoteTriggerProfile);
         server.addFeatureProfile(serverLocalAuthListProfile);
 
-        if (serverProperties.getEnableSsl()) {
-            server.enableWSS(sslContext);
+        if (sslContext.isPresent()) {
+            server.enableWSS(sslContext.get());
         }
-        server.open(serverProperties.getHost(), serverProperties.getPort(), serverEvents);
+        server.open(serverProperties.getHost(), serverProperties.getPort(), serverEvents.orElse(null));
 
         return server;
     }
