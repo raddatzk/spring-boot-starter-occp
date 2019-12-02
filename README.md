@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/kevinraddatz/spring-boot-starter-occp/branch/master/graph/badge.svg)](https://codecov.io/gh/kevinraddatz/spring-boot-starter-occp)
+
 # Spring Boot Starter OCPP
 
 This project aims to provide a spring boot starter for [ocpp][openchargealliance]
