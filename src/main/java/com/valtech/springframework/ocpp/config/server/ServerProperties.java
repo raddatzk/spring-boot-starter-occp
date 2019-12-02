@@ -46,7 +46,7 @@ public class ServerProperties {
      * <p>
      * Defaults to false.
      */
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     /**
      * IP Address under which the server will be reachable.

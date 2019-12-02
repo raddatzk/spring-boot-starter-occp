@@ -42,11 +42,11 @@ public class ClientProperties {
     private ConnectionType type = ConnectionType.JSON;
 
     /**
-     * Enables the the client.
+     * Enables the client.
      * <p>
      * Defaults to false.
      */
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     /**
      * Call back info that the server can send requests to.
@@ -74,7 +74,7 @@ public class ClientProperties {
      * <p>
      * Defaults to false.
      */
-    private Boolean sslEnabled = false;
+    private Boolean enableSsl = false;
 
     @Bean
     @ConfigurationProperties(prefix = "spring.ocpp.client.ssl")
