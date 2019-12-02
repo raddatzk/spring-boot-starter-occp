@@ -2,11 +2,11 @@
 
 # Spring Boot Starter OCPP
 
-This project aims to provide a spring boot starter for [ocpp][openchargealliance]
+This project aims to provide a spring boot starter for [ocpp](https://www.openchargealliance.org/)
 
 #### Note
 
-Currently this starter is not available on [Maven Central][mavencentral], as the underlying library [java-ocpp][java-ocpp] is not yet available and thus hinders a proper ci integration.
+Currently this starter is not available on [Maven Central](https://mvnrepository.com/), as the underlying library [java-ocpp][https://github.com/ChargeTimeEU/Java-OCA-OCPP] is not yet available and thus hinders a proper ci integration.
 
 For now follow those steps:
 * `cd /tmp`
@@ -20,7 +20,7 @@ For now follow those steps:
 
 ## Getting started
 
-The library is available on [Maven Central][mavencentral], so you can use Gradle and Maven to include this starter in your project.
+The library is available on [Maven Central](https://mvnrepository.com/), so you can use Gradle and Maven to include this starter in your project.
 
 ### Maven
 
@@ -138,7 +138,3 @@ Specify the password to the key in the key store. <br>
 
 Required if `spring.ocpp.{server/client}.enable-ssl=true` <br>
 Specify the password for the key store. <br>
-
-[openchargealliance]: [https://www.openchargealliance.org/]
-[mavencentral]: [https://mvnrepository.com/]
-[java-ocpp]: [https://github.com/ChargeTimeEU/Java-OCA-OCPP]
