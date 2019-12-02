@@ -1,8 +1,8 @@
 package com.valtech.springframework.ocpp;
 
-import com.valtech.springframework.ocpp.server.ServerCoreEventHandlerAdapter;
-import com.valtech.springframework.ocpp.server.ServerEventsAdapter;
-import com.valtech.springframework.ocpp.server.ServerFirmwareManagementEventHandlerAdapter;
+import com.valtech.springframework.ocpp.OcppTestBase.ServerCoreEventHandler;
+import com.valtech.springframework.ocpp.OcppTestBase.ServerEvents;
+import com.valtech.springframework.ocpp.OcppTestBase.ServerFirmwareManagementEventHandler;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
@@ -11,26 +11,18 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JsonServerAutoConfigurationTests {
+public class SOAPServerAutoConfigurationTests {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(JsonServerAutoConfiguration.class));
-
-    private static class ServerCoreEventHandler implements ServerCoreEventHandlerAdapter {
-    }
-
-    private static class ServerEvents implements ServerEventsAdapter {
-    }
-
-    private static class ServerFirmwareManagementEventHandler implements ServerFirmwareManagementEventHandlerAdapter {
-    }
+            .withConfiguration(AutoConfigurations.of(SOAPServerAutoConfiguration.class));
 
     @Test
     @DisplayName("Assert that context fails when server starts without required ServerCoreEventHandler bean")
     void assertThatContextFails_whenServerStartsWithoutServerCoreEventHandlerBean() {
         this.contextRunner
                 .withPropertyValues(
-                        "spring.ocpp.server.enabled:true"
+                        "spring.ocpp.server.enabled:true",
+                        "spring.ocpp.server.type:soap"
                 )
                 .run(
                         context -> assertThat(context).getFailure().hasCauseInstanceOf(UnsatisfiedDependencyException.class)
@@ -46,11 +38,12 @@ class JsonServerAutoConfigurationTests {
                 .withPropertyValues(
                         "spring.ocpp.server.enabled:true",
                         "spring.ocpp.server.host:127.0.0.1",
-                        "spring.ocpp.server.port:8887"
+                        "spring.ocpp.server.port:8887",
+                        "spring.ocpp.server.type:soap"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonServer").isNotNull();
+                            assertThat(context).getBean("soapServer").isNotNull();
                             assertThat(context).getBean(ServerCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("serverCoreProfile").isNotNull();
                         }
@@ -66,11 +59,12 @@ class JsonServerAutoConfigurationTests {
                 .withPropertyValues(
                         "spring.ocpp.server.enabled:true",
                         "spring.ocpp.server.host:127.0.0.1",
-                        "spring.ocpp.server.port:8887"
+                        "spring.ocpp.server.port:8887",
+                        "spring.ocpp.server.type:soap"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonServer").isNotNull();
+                            assertThat(context).getBean("soapServer").isNotNull();
                             assertThat(context).getBean(ServerCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("serverCoreProfile").isNotNull();
                             assertThat(context).getBean(ServerEvents.class).isNotNull();
@@ -87,61 +81,16 @@ class JsonServerAutoConfigurationTests {
                 .withPropertyValues(
                         "spring.ocpp.server.enabled:true",
                         "spring.ocpp.server.host:127.0.0.1",
-                        "spring.ocpp.server.port:8887"
+                        "spring.ocpp.server.port:8887",
+                        "spring.ocpp.server.type:soap"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonServer").isNotNull();
+                            assertThat(context).getBean("soapServer").isNotNull();
                             assertThat(context).getBean(ServerCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("serverCoreProfile").isNotNull();
                             assertThat(context).getBean(ServerFirmwareManagementEventHandler.class).isNotNull();
                             assertThat(context).getBean("serverFirmwareManagementProfile").isNotNull();
-                        }
-                );
-    }
-
-    @Test
-    @DisplayName("Assert that SSLContext is available if configured properly")
-    void assertThatSSLContextIsAvailableIfConfigured() {
-        this.contextRunner
-                .withBean(ServerCoreEventHandler.class)
-                .withPropertyValues(
-                        "spring.ocpp.server.enabled:true",
-                        "spring.ocpp.server.host:127.0.0.1",
-                        "spring.ocpp.server.port:8887",
-                        "spring.ocpp.server.enable-ssl:true",
-                        "spring.ocpp.server.ssl.key-password:keypassword",
-                        "spring.ocpp.server.ssl.key-store-type:jks",
-                        "spring.ocpp.server.ssl.key-store-path:classpath://keystore.jks",
-                        "spring.ocpp.server.ssl.store-password:storepassword"
-                )
-                .run(
-                        context -> {
-                            assertThat(context).getBean("jsonServer").isNotNull();
-                            assertThat(context).getBean("serverSSLContext").isNotNull();
-                        }
-                );
-    }
-
-    @Test
-    @DisplayName("Assert that SSLContext is available if configured properly and keystore not from classpath")
-    void assertThatSSLContextIsAvailableIfConfiguredAndKeyStoreNotFromClasspath() {
-        this.contextRunner
-                .withBean(ServerCoreEventHandler.class)
-                .withPropertyValues(
-                        "spring.ocpp.server.enabled:true",
-                        "spring.ocpp.server.host:127.0.0.1",
-                        "spring.ocpp.server.port:8887",
-                        "spring.ocpp.server.enable-ssl:true",
-                        "spring.ocpp.server.ssl.key-password:keypassword",
-                        "spring.ocpp.server.ssl.key-store-type:jks",
-                        "spring.ocpp.server.ssl.key-store-path:keystore.jks",
-                        "spring.ocpp.server.ssl.store-password:storepassword"
-                )
-                .run(
-                        context -> {
-                            assertThat(context).getBean("jsonServer").isNotNull();
-                            assertThat(context).getBean("serverSSLContext").isNotNull();
                         }
                 );
     }

@@ -1,9 +1,11 @@
 package com.valtech.springframework.ocpp.config.server;
 
+import com.valtech.springframework.ocpp.ConnectionType;
 import com.valtech.springframework.ocpp.config.ssl.SSLProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,14 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "spring.ocpp.server")
 public class ServerProperties {
+
+    /**
+     * Type of the client.
+     * <p>
+     * Defaults to JSON.
+     */
+    @NestedConfigurationProperty
+    private ConnectionType type = ConnectionType.JSON;
 
     /**
      * Enables the server.

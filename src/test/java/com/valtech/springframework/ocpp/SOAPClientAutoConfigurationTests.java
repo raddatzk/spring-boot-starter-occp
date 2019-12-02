@@ -1,77 +1,50 @@
 package com.valtech.springframework.ocpp;
 
-import com.valtech.springframework.ocpp.client.*;
-import com.valtech.springframework.ocpp.server.ServerCoreEventHandlerAdapter;
+import com.valtech.springframework.ocpp.OcppTestBase.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.UnsatisfiedDependencyException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JsonClientAutoConfigurationTests {
+public class SOAPClientAutoConfigurationTests {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(JsonClientAutoConfiguration.class));
+            .withConfiguration(AutoConfigurations.of(SOAPClientAutoConfiguration.class));
 
     private final ApplicationContextRunner combinedContextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(JsonClientAutoConfiguration.class, JsonServerAutoConfiguration.class));
-
-    private static class ServerCoreEventHandler implements ServerCoreEventHandlerAdapter {
-    }
-
-    private static class ClientCoreEventHandler implements ClientCoreEventHandlerAdapter {
-    }
-
-    private static class ClientFirmwareManagementEventHandler implements ClientFirmwareManagementEventHandlerAdapter {
-    }
-
-    private static class ClientLocalAuthListEventHandler implements ClientLocalAuthListEventHandlerAdapter {
-
-    }
-
-    private static class ClientRemoteTriggerEventHandler implements ClientRemoteTriggerEventHandlerAdapter {
-
-    }
-
-    private static class ClientReservationEventHandler implements ClientReservationEventHandlerAdapter {
-
-    }
-
-    private static class ClientSmartChargingEventHandler implements ClientSmartChargingEventHandlerAdapter {
-
-    }
-
-    private static class ClientEvents implements ClientEventsAdapter {
-    }
+            .withConfiguration(AutoConfigurations.of(SOAPClientAutoConfiguration.class, SOAPServerAutoConfiguration.class));
 
     @Test
     @DisplayName("Assert that context fails when client starts without required ClientCoreEventHandler bean")
-    void assertThatContextFails_whenServerStartsWithoutServerCoreEventHandlerBean() {
+    void assertThatContextFails_whenClientStartsWithoutRequiredClientCoreEventHandlerBean() {
         this.contextRunner
                 .withPropertyValues(
-                        "spring.ocpp.client.enabled:true"
+                        "spring.ocpp.client.enabled:true",
+                        "spring.ocpp.client.type:soap"
                 )
                 .run(
-                        context -> assertThat(context).getFailure().hasCauseInstanceOf(UnsatisfiedDependencyException.class)
-
+                        context -> assertThat(context).getFailure().hasRootCauseInstanceOf(NoSuchBeanDefinitionException.class)
                 );
     }
 
     @Test
-    @DisplayName("Assert that client starts with enabled core profile and required properties")
-    void assertThatServerExistsWithEnabledCoreProfile() {
+    @DisplayName("Assert that client starts with activated core profile and required properties")
+    void assertThatClientStartsWithActivatedCoreProfileAndRequiredProperties() {
         this.contextRunner
                 .withBean(ClientCoreEventHandler.class)
                 .withPropertyValues(
                         "spring.ocpp.client.enabled:true",
                         "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier"
+                        "spring.ocpp.client.identifier:identifier",
+                        "spring.ocpp.client.type:soap",
+                        "spring.ocpp.client.soap-callback:http://localhost:8890"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
+                            assertThat(context).getBean("soapClient").isNotNull();
                             assertThat(context).getBean(ClientCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("clientCoreProfile").isNotNull();
                         }
@@ -79,19 +52,21 @@ class JsonClientAutoConfigurationTests {
     }
 
     @Test
-    @DisplayName("Assert that ServerEvents bean are enabled when configured")
-    void assertThatServerEventsBeanAreEnabledWhenConfigured() {
+    @DisplayName("Assert that clientEvents are enabled when configured")
+    void assertThatClientEventsAreEnabledWhenConfigured() {
         this.contextRunner
                 .withBean(ClientCoreEventHandler.class)
                 .withBean(ClientEvents.class)
                 .withPropertyValues(
                         "spring.ocpp.client.enabled:true",
                         "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier"
+                        "spring.ocpp.client.identifier:identifier",
+                        "spring.ocpp.client.type:soap",
+                        "spring.ocpp.client.soap-callback:http://localhost:8891"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
+                            assertThat(context).getBean("soapClient").isNotNull();
                             assertThat(context).getBean(ClientCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("clientCoreProfile").isNotNull();
                             assertThat(context).getBean(ClientEvents.class).isNotNull();
@@ -108,11 +83,13 @@ class JsonClientAutoConfigurationTests {
                 .withPropertyValues(
                         "spring.ocpp.client.enabled:true",
                         "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier"
+                        "spring.ocpp.client.identifier:identifier",
+                        "spring.ocpp.client.type:soap",
+                        "spring.ocpp.client.soap-callback:http://localhost:8892"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
+                            assertThat(context).getBean("soapClient").isNotNull();
                             assertThat(context).getBean(ClientCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("clientCoreProfile").isNotNull();
                             assertThat(context).getBean(ClientFirmwareManagementEventHandler.class).isNotNull();
@@ -130,11 +107,13 @@ class JsonClientAutoConfigurationTests {
                 .withPropertyValues(
                         "spring.ocpp.client.enabled:true",
                         "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier"
+                        "spring.ocpp.client.identifier:identifier",
+                        "spring.ocpp.client.type:soap",
+                        "spring.ocpp.client.soap-callback:http://localhost:8893"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
+                            assertThat(context).getBean("soapClient").isNotNull();
                             assertThat(context).getBean(ClientCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("clientCoreProfile").isNotNull();
                             assertThat(context).getBean(ClientLocalAuthListEventHandler.class).isNotNull();
@@ -152,11 +131,13 @@ class JsonClientAutoConfigurationTests {
                 .withPropertyValues(
                         "spring.ocpp.client.enabled:true",
                         "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier"
+                        "spring.ocpp.client.identifier:identifier",
+                        "spring.ocpp.client.type:soap",
+                        "spring.ocpp.client.soap-callback:http://localhost:8894"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
+                            assertThat(context).getBean("soapClient").isNotNull();
                             assertThat(context).getBean(ClientCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("clientCoreProfile").isNotNull();
                             assertThat(context).getBean(ClientRemoteTriggerEventHandler.class).isNotNull();
@@ -174,11 +155,13 @@ class JsonClientAutoConfigurationTests {
                 .withPropertyValues(
                         "spring.ocpp.client.enabled:true",
                         "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier"
+                        "spring.ocpp.client.identifier:identifier",
+                        "spring.ocpp.client.type:soap",
+                        "spring.ocpp.client.soap-callback:http://localhost:8895"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
+                            assertThat(context).getBean("soapClient").isNotNull();
                             assertThat(context).getBean(ClientCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("clientCoreProfile").isNotNull();
                             assertThat(context).getBean(ClientReservationEventHandler.class).isNotNull();
@@ -196,11 +179,13 @@ class JsonClientAutoConfigurationTests {
                 .withPropertyValues(
                         "spring.ocpp.client.enabled:true",
                         "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier"
+                        "spring.ocpp.client.identifier:identifier",
+                        "spring.ocpp.client.type:soap",
+                        "spring.ocpp.client.soap-callback:http://localhost:8896"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
+                            assertThat(context).getBean("soapClient").isNotNull();
                             assertThat(context).getBean(ClientCoreEventHandler.class).isNotNull();
                             assertThat(context).getBean("clientCoreProfile").isNotNull();
                             assertThat(context).getBean(ClientSmartChargingEventHandler.class).isNotNull();
@@ -209,51 +194,6 @@ class JsonClientAutoConfigurationTests {
                 );
     }
 
-    @Test
-    @DisplayName("Assert that SSLContext is available if configured properly")
-    void assertThatSSLContextIsAvailableIfConfigured() {
-        this.contextRunner
-                .withBean(ClientCoreEventHandler.class)
-                .withPropertyValues(
-                        "spring.ocpp.client.enabled:true",
-                        "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier",
-                        "spring.ocpp.client.enable-ssl:true",
-                        "spring.ocpp.client.ssl.key-password:keypassword",
-                        "spring.ocpp.client.ssl.key-store-type:jks",
-                        "spring.ocpp.client.ssl.key-store-path:classpath://keystore.jks",
-                        "spring.ocpp.client.ssl.store-password:storepassword"
-                )
-                .run(
-                        context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
-                            assertThat(context).getBean("clientSSLContext").isNotNull();
-                        }
-                );
-    }
-
-    @Test
-    @DisplayName("Assert that SSLContext is available if configured properly and keystore not from classpath")
-    void assertThatSSLContextIsAvailableIfConfiguredAndKeyStoreNotFromClasspath() {
-        this.contextRunner
-                .withBean(ClientCoreEventHandler.class)
-                .withPropertyValues(
-                        "spring.ocpp.client.enabled:true",
-                        "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier",
-                        "spring.ocpp.client.enable-ssl:true",
-                        "spring.ocpp.client.ssl.key-password:keypassword",
-                        "spring.ocpp.client.ssl.key-store-type:jks",
-                        "spring.ocpp.client.ssl.key-store-path:keystore.jks",
-                        "spring.ocpp.client.ssl.store-password:storepassword"
-                )
-                .run(
-                        context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
-                            assertThat(context).getBean("clientSSLContext").isNotNull();
-                        }
-                );
-    }
 
     @Test
     @DisplayName("Assert that client waits for server when server is also enabled")
@@ -265,15 +205,19 @@ class JsonClientAutoConfigurationTests {
                         "spring.ocpp.server.enabled:true",
                         "spring.ocpp.server.host:localhost",
                         "spring.ocpp.server.port:8887",
+                        "spring.ocpp.server.type:soap",
                         "spring.ocpp.client.enabled:true",
                         "spring.ocpp.client.connection-url:ws://localhost:8887",
-                        "spring.ocpp.client.identifier:identifier"
+                        "spring.ocpp.client.identifier:identifier",
+                        "spring.ocpp.client.type:soap",
+                        "spring.ocpp.client.soap-callback:http://localhost:8897"
                 )
                 .run(
                         context -> {
-                            assertThat(context).getBean("jsonClient").isNotNull();
-                            assertThat(context).getBean("jsonServer").isNotNull();
+                            assertThat(context).getBean("soapClient").isNotNull();
+                            assertThat(context).getBean("soapServer").isNotNull();
                         }
                 );
     }
+
 }

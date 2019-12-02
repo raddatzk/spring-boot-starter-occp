@@ -2,28 +2,26 @@ package com.valtech.springframework.ocpp;
 
 import com.valtech.springframework.ocpp.config.client.ClientProfilesConfig;
 import com.valtech.springframework.ocpp.config.client.ClientProperties;
-import com.valtech.springframework.ocpp.config.client.ClientSSLConfig;
 import com.valtech.springframework.ocpp.config.client.ClientTools;
 import eu.chargetime.ocpp.ClientEvents;
-import eu.chargetime.ocpp.JSONClient;
+import eu.chargetime.ocpp.SOAPClient;
 import eu.chargetime.ocpp.feature.profile.*;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 
-import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 
 @Configuration
-@ConditionalOnProperty(value = "spring.ocpp.client.enabled", havingValue = "true")
+@ConditionalOnExpression("${spring.ocpp.client.enabled:true} && '${spring.ocpp.client.type}'.equals('soap')")
 @EnableConfigurationProperties({ClientProperties.class})
-@Import({ClientProfilesConfig.class, ClientSSLConfig.class})
-public class JsonClientAutoConfiguration {
+@Import({ClientProfilesConfig.class})
+public class SOAPClientAutoConfiguration {
 
     private final ClientProperties clientProperties;
 
@@ -34,10 +32,9 @@ public class JsonClientAutoConfiguration {
     private final Optional<ClientReservationProfile> clientReservationProfile;
     private final Optional<ClientSmartChargingProfile> clientSmartChargingProfile;
     private final Optional<ClientEvents> clientEvents;
-    private final Optional<SSLContext> sslContext;
 
-    @java.lang.SuppressWarnings("squid:S00107")
-    public JsonClientAutoConfiguration(ClientProperties clientProperties, ClientCoreProfile clientCoreProfile, Optional<ClientFirmwareManagementProfile> clientFirmwareManagementProfile, Optional<ClientLocalAuthListProfile> clientLocalAuthListProfile, Optional<ClientRemoteTriggerProfile> clientRemoteTriggerProfile, Optional<ClientReservationProfile> clientReservationProfile, Optional<ClientSmartChargingProfile> clientSmartChargingProfile, Optional<ClientEvents> clientEvents, @Qualifier("clientSSLContext") Optional<SSLContext> sslContext) {
+    @SuppressWarnings("squid:S00107")
+    public SOAPClientAutoConfiguration(ClientProperties clientProperties, ClientCoreProfile clientCoreProfile, Optional<ClientFirmwareManagementProfile> clientFirmwareManagementProfile, Optional<ClientLocalAuthListProfile> clientLocalAuthListProfile, Optional<ClientRemoteTriggerProfile> clientRemoteTriggerProfile, Optional<ClientReservationProfile> clientReservationProfile, Optional<ClientSmartChargingProfile> clientSmartChargingProfile, Optional<ClientEvents> clientEvents) {
         this.clientProperties = clientProperties;
         this.clientCoreProfile = clientCoreProfile;
         this.clientFirmwareManagementProfile = clientFirmwareManagementProfile;
@@ -46,35 +43,30 @@ public class JsonClientAutoConfiguration {
         this.clientReservationProfile = clientReservationProfile;
         this.clientSmartChargingProfile = clientSmartChargingProfile;
         this.clientEvents = clientEvents;
-        this.sslContext = sslContext;
     }
 
-    @Bean("jsonClient")
-    @ConditionalOnProperty(value = "spring.ocpp.server.enabled", havingValue = "true")
-    @DependsOn("jsonServer")
-    JSONClient jsonClientWithServer() throws IOException {
-        return createJsonClient();
+    @Bean("soapClient")
+    @ConditionalOnExpression("${spring.ocpp.server.enabled:true} and '${spring.ocpp.server.type}'.equals('soap')")
+    @DependsOn("soapServer")
+    SOAPClient soapClientWithServer() throws IOException {
+        return createSoapClient();
     }
 
     @Bean
-    JSONClient jsonClient() throws IOException {
-        return createJsonClient();
+    SOAPClient soapClient() throws IOException {
+        return createSoapClient();
     }
 
-    private JSONClient createJsonClient() throws IOException {
+    private SOAPClient createSoapClient() throws IOException {
         ClientTools.validateClientProperties(clientProperties);
 
-        JSONClient client = new JSONClient(clientCoreProfile, clientProperties.getIdentifier());
+        SOAPClient client = new SOAPClient(clientProperties.getIdentifier(), new URL(clientProperties.getSoapCallback()), clientCoreProfile);
 
         clientFirmwareManagementProfile.ifPresent(client::addFeatureProfile);
         clientLocalAuthListProfile.ifPresent(client::addFeatureProfile);
         clientRemoteTriggerProfile.ifPresent(client::addFeatureProfile);
         clientReservationProfile.ifPresent(client::addFeatureProfile);
         clientSmartChargingProfile.ifPresent(client::addFeatureProfile);
-
-        if (sslContext.isPresent()) {
-            client.enableWSS(sslContext.get());
-        }
 
         client.connect(clientProperties.getConnectionUrl(), clientEvents.orElse(null));
 

@@ -28,8 +28,8 @@ public class ClientProfilesConfig {
     }
 
     @Bean
-    @ConditionalOnBean(ClientRemoteTriggerHandler.class)
-    public ClientRemoteTriggerProfile clientRemoteTriggerProfile(ClientRemoteTriggerHandler clientRemoteTriggerEventHandler) {
+    @ConditionalOnBean(ClientRemoteTriggerEventHandler.class)
+    public ClientRemoteTriggerProfile clientRemoteTriggerProfile(ClientRemoteTriggerEventHandler clientRemoteTriggerEventHandler) {
         return new ClientRemoteTriggerProfile(clientRemoteTriggerEventHandler);
     }
 

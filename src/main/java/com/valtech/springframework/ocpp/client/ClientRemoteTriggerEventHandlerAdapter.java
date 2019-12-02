@@ -1,10 +1,10 @@
 package com.valtech.springframework.ocpp.client;
 
-import eu.chargetime.ocpp.feature.profile.ClientRemoteTriggerHandler;
+import eu.chargetime.ocpp.feature.profile.ClientRemoteTriggerEventHandler;
 import eu.chargetime.ocpp.model.remotetrigger.TriggerMessageConfirmation;
 import eu.chargetime.ocpp.model.remotetrigger.TriggerMessageRequest;
 
-public interface ClientRemoteTriggerEventHandlerAdapter extends ClientRemoteTriggerHandler {
+public interface ClientRemoteTriggerEventHandlerAdapter extends ClientRemoteTriggerEventHandler {
 
     /**
      * Handle a {@link TriggerMessageRequest}

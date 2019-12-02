@@ -8,6 +8,41 @@
           "description": "Use a keystore of type JKS."
         }
       ]
+    },
+    {
+      "name": "spring.ocpp.client.ssl.key-store-type",
+      "values": [
+        {
+          "value": "jks",
+          "description": "Use a keystore of type JKS."
+        }
+      ]
+    },
+    {
+      "name": "spring.ocpp.server.type",
+      "values": [
+        {
+          "value": "json",
+          "description": "Define a json client."
+        },
+        {
+          "value": "soap",
+          "description": "Define a soap client."
+        }
+      ]
+    },
+    {
+      "name": "spring.ocpp.client.type",
+      "values": [
+        {
+          "value": "json",
+          "description": "Define a json client."
+        },
+        {
+          "value": "soap",
+          "description": "Define a soap client."
+        }
+      ]
     }
   ]
 }
