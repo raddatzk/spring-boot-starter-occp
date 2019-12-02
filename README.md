@@ -6,7 +6,7 @@ This project aims to provide a spring boot starter for [ocpp](https://www.opench
 
 #### Note
 
-Currently this starter is not available on [Maven Central](https://mvnrepository.com/), as the underlying library [java-ocpp][https://github.com/ChargeTimeEU/Java-OCA-OCPP] is not yet available and thus hinders a proper ci integration.
+Currently this starter is not available on [Maven Central](https://mvnrepository.com/), as the underlying library [java-ocpp][https://github.com/kevinraddatz/Java-OCA-OCPP.git] is not yet available and thus hinders a proper ci integration.
 
 For now follow those steps:
 * `cd /tmp`

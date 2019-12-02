@@ -34,6 +34,13 @@ publishing {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+
 sonarqube {
     def exclusions = [
             "**/com/valtech/springframework/ocpp/config/**/*Properties.java",
