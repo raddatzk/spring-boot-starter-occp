@@ -1,3 +1,21 @@
+/*
+ *
+ *  * Copyright 2019 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      https://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
 package com.valtech.springframework.ocpp;
 
 import com.valtech.springframework.ocpp.client.*;
@@ -5,39 +23,39 @@ import com.valtech.springframework.ocpp.server.ServerCoreEventHandlerAdapter;
 import com.valtech.springframework.ocpp.server.ServerEventsAdapter;
 import com.valtech.springframework.ocpp.server.ServerFirmwareManagementEventHandlerAdapter;
 
-public abstract class OcppTestBase {
+abstract class OcppTestBase {
 
-    public static class ClientCoreEventHandler implements ClientCoreEventHandlerAdapter {
+    static class ClientCoreEventHandler implements ClientCoreEventHandlerAdapter {
     }
 
-    public static class ClientFirmwareManagementEventHandler implements ClientFirmwareManagementEventHandlerAdapter {
+    static class ClientFirmwareManagementEventHandler implements ClientFirmwareManagementEventHandlerAdapter {
     }
 
-    public static class ClientLocalAuthListEventHandler implements ClientLocalAuthListEventHandlerAdapter {
-
-    }
-
-    public static class ClientRemoteTriggerEventHandler implements ClientRemoteTriggerEventHandlerAdapter {
+    static class ClientLocalAuthListEventHandler implements ClientLocalAuthListEventHandlerAdapter {
 
     }
 
-    public static class ClientReservationEventHandler implements ClientReservationEventHandlerAdapter {
+    static class ClientRemoteTriggerEventHandler implements ClientRemoteTriggerEventHandlerAdapter {
 
     }
 
-    public static class ClientSmartChargingEventHandler implements ClientSmartChargingEventHandlerAdapter {
+    static class ClientReservationEventHandler implements ClientReservationEventHandlerAdapter {
 
     }
 
-    public static class ClientEvents implements ClientEventsAdapter {
+    static class ClientSmartChargingEventHandler implements ClientSmartChargingEventHandlerAdapter {
+
     }
 
-    public static class ServerCoreEventHandler implements ServerCoreEventHandlerAdapter {
+    static class ClientEvents implements ClientEventsAdapter {
     }
 
-    public static class ServerEvents implements ServerEventsAdapter {
+    static class ServerCoreEventHandler implements ServerCoreEventHandlerAdapter {
     }
 
-    public static class ServerFirmwareManagementEventHandler implements ServerFirmwareManagementEventHandlerAdapter {
+    static class ServerEvents implements ServerEventsAdapter {
+    }
+
+    static class ServerFirmwareManagementEventHandler implements ServerFirmwareManagementEventHandlerAdapter {
     }
 }
