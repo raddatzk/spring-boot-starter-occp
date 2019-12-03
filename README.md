@@ -6,17 +6,14 @@ This project aims to provide a spring boot starter for [ocpp](https://www.opench
 
 #### Note
 
-Currently this starter is not available on [Maven Central](https://mvnrepository.com/), as the underlying library [java-ocpp][https://github.com/kevinraddatz/Java-OCA-OCPP.git] is not yet available and thus hinders a proper ci integration.
-
+Currently this starter is not available on [Maven Central](https://mvnrepository.com/). <br>
 For now follow those steps:
-* `cd /tmp`
-* `git cone https://github.com/ChargeTimeEU/Java-OCA-OCPP.git`
-* `cd Java-OCA-OCPP`
-* `./gradlew publishToMavenLocal`
 * `cd /tmp`
 * `git clone https://github.com/kevinraddatz/spring-boot-starter-occp.git`
 * `cd spring-boot-starter-occp`
 * `./gradlew publishToMavenLocal`
+
+If you are using gradle, don't forget to include `mavenLocal()` in the root `repositories {}` section in your build.gradle.
 
 ## Getting started
 
