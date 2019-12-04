@@ -12,11 +12,12 @@ buildscript {
 }
 
 plugins {
-    id 'io.franzbecker.gradle-lombok' version "3.2.0"
+    id 'com.bmuschko.nexus' version '2.3.1'
+    id 'io.franzbecker.gradle-lombok' version '3.2.0'
+    id 'jacoco'
     id 'java-library'
     id 'maven-publish'
-    id 'org.sonarqube' version "2.7"
-    id 'jacoco'
+    id 'org.sonarqube' version '2.7'
 }
 
 lombok {
@@ -24,7 +25,7 @@ lombok {
 }
 
 group = 'com.valtech.springframework.boot'
-version = '1.0.0.RELEASE'
+version = '1.1.0.RELEASE'
 
 publishing {
     publications {
@@ -32,6 +33,49 @@ publishing {
             from(components.java)
         }
     }
+}
+
+modifyPom {
+    project {
+        name 'spring-boot-starter-ocpp'
+        description 'Integrate OCPP into your spring boot project'
+        url 'https://github.com/kevinraddatz/spring-boot-starter-occp'
+        inceptionYear '2019'
+
+        scm {
+            url 'https://github.com/kevinraddatz/spring-boot-starter-occp'
+            connection 'scm:https://github.com/kevinraddatz/spring-boot-starter-occp.git'
+            developerConnection 'scm:git@github.com:kevinraddatz/spring-boot-starter-occp.git'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'kevinraddatz'
+                name 'Kevin Raddatz'
+                email 'kevin.raddatz@valtech-mobility.com'
+            }
+        }
+    }
+}
+
+extraArchive {
+    sources = true
+    tests = true
+    javadoc = true
+}
+
+nexus {
+    sign = true
+    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
 }
 
 jacocoTestReport {

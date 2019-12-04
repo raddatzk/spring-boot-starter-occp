@@ -20,7 +20,7 @@ jobs:
           java-version: 1.8
       - name: install java-oca-ocpp temporarily
         run: |
-          git clone https://github.com/kevinraddatz/Java-OCA-OCPP.git
+          git clone https://github.com/ChargeTimeEU/Java-OCA-OCPP.git
           cd Java-OCA-OCPP
           ./gradlew publishToMavenLocal
           cd ..

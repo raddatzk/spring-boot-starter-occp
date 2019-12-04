@@ -1,5 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.valtech.springframework.ocpp.JSONClientAutoConfiguration,\
-com.valtech.springframework.ocpp.JSONServerAutoConfiguration,\
-com.valtech.springframework.ocpp.SOAPClientAutoConfiguration,\
-com.valtech.springframework.ocpp.SOAPServerAutoConfiguration
+com.valtech.springframework.boot.ocpp.JSONClientAutoConfiguration,\
+com.valtech.springframework.boot.ocpp.JSONServerAutoConfiguration,\
+com.valtech.springframework.boot.ocpp.SOAPClientAutoConfiguration,\
+com.valtech.springframework.boot.ocpp.SOAPServerAutoConfiguration
